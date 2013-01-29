@@ -64,12 +64,18 @@
     </DebugOption>
     <ExcludeFile/>
   </Target>
-  <Components path="./"/>
+  <Components path="./">
+    <Component id="376" name="xStartup" path="" type="2"/>
+    <Component id="377" name="xLowLayer" path="" type="2"/>
+    <Component id="378" name="xCORE" path="" type="2"/>
+    <Component id="379" name="xSysCtl" path="" type="2"/>
+    <Component id="380" name="xGPIO" path="" type="2"/>
+  </Components>
   <Files>
     <File name="CoX/CoX_Driver/keypad_4x4.h" path="../../../lib/keypad_4x4.h" type="1"/>
     <File name="CoX/CoX_Peripheral/inc/xhw_acmp.h" path="CoX/CoX_Peripheral/inc/xhw_acmp.h" type="1"/>
-    <File name="CoX/CoX_Peripheral/inc/xhw_spi.h" path="CoX/CoX_Peripheral/inc/xhw_spi.h" type="1"/>
     <File name="example/KeypadScan.c" path="../src/KeypadScan.c" type="1"/>
+    <File name="CoX/CoX_Peripheral/inc/xhw_spi.h" path="CoX/CoX_Peripheral/inc/xhw_spi.h" type="1"/>
     <File name="CoX/CoX_Peripheral/src" path="" type="2"/>
     <File name="CoX/CoX_Peripheral/src/xgpio.c" path="../../../../../../../CoX_Peripheral/CoX_Peripheral_M051/libcox/xgpio.c" type="1"/>
     <File name="Cookie" path="" type="2"/>
@@ -82,9 +88,9 @@
     <File name="CoX/CoX_Peripheral/inc/xhw_ints.h" path="../../../../../../../CoX_Peripheral/CoX_Peripheral_M051/libcox/xhw_ints.h" type="1"/>
     <File name="CoX/CoX_Peripheral/inc/xuart.h" path="../../../../../../../CoX_Peripheral/CoX_Peripheral_M051/libcox/xuart.h" type="1"/>
     <File name="CoX/CoX_Peripheral/inc/xsysctl.h" path="../../../../../../../CoX_Peripheral/CoX_Peripheral_M051/libcox/xsysctl.h" type="1"/>
-    <File name="CoX/CoX_Peripheral/inc/xhw_adc.h" path="CoX/CoX_Peripheral/inc/xhw_adc.h" type="1"/>
-    <File name="CoX/CoX_Peripheral/inc" path="" type="2"/>
     <File name="CoX/CoX_Peripheral/inc/xhw_sysctl.h" path="../../../../../../../CoX_Peripheral/CoX_Peripheral_M051/libcox/xhw_sysctl.h" type="1"/>
+    <File name="CoX/CoX_Peripheral/inc" path="" type="2"/>
+    <File name="CoX/CoX_Peripheral/inc/xhw_adc.h" path="CoX/CoX_Peripheral/inc/xhw_adc.h" type="1"/>
     <File name="CoX/CoX_Peripheral/inc/xdebug.h" path="../../../../../../../CoX_Peripheral/CoX_Peripheral_M051/libcox/xdebug.h" type="1"/>
     <File name="syscalls/syscalls.c" path="syscalls/syscalls.c" type="1"/>
     <File name="CoX/CoX_Peripheral/inc/xhw_i2c.h" path="CoX/CoX_Peripheral/inc/xhw_i2c.h" type="1"/>
@@ -103,8 +109,8 @@
     <File name="CoX/CoX_Peripheral/src/xsysctl.c" path="../../../../../../../CoX_Peripheral/CoX_Peripheral_M051/libcox/xsysctl.c" type="1"/>
     <File name="CoX/CoX_Peripheral/inc/xhw_gpio.h" path="../../../../../../../CoX_Peripheral/CoX_Peripheral_M051/libcox/xhw_gpio.h" type="1"/>
     <File name="CoX/CoX_Peripheral/inc/xhw_memmap.h" path="../../../../../../../CoX_Peripheral/CoX_Peripheral_M051/libcox/xhw_memmap.h" type="1"/>
-    <File name="CoX/CoX_Peripheral/inc/xhw_timer.h" path="CoX/CoX_Peripheral/inc/xhw_timer.h" type="1"/>
     <File name="CoX/CoX_Peripheral/inc/xhw_uart.h" path="../../../../../../../CoX_Peripheral/CoX_Peripheral_M051/libcox/xhw_uart.h" type="1"/>
+    <File name="CoX/CoX_Peripheral/inc/xhw_timer.h" path="CoX/CoX_Peripheral/inc/xhw_timer.h" type="1"/>
     <File name="main.c" path="../main.c" type="1"/>
   </Files>
 </Project>
