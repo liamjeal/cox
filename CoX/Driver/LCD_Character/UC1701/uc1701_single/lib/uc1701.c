@@ -35,6 +35,15 @@
 //! ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
 //! THE POSSIBILITY OF SUCH DAMAGE.
 //*****************************************************************************
+
+// version log
+// when  : 2013.3.5
+// why   : there are 2 blank columns at right of lcd.
+// who   : Nemon
+// where : all number "129"
+// what  : change all "129" to "127"
+
+
 #include "xhw_types.h"
 #include "xsysctl.h"
 #include "xdebug.h"
@@ -529,13 +538,13 @@ void UC1701Dispaly(unsigned char ucLine, unsigned char ucRow,
     
     for(i=0;i<8;i++)
     {
-        UC1701AddressSet((ucLine*2),(129-(ucRow*8)-i));
+        UC1701AddressSet((ucLine*2),(127-(ucRow*8)-i));
         uctemp=Ascii[k+i];
         UC1701DataWrite(uctemp);
     }  
     for(i=0;i<8;i++)
     {
-        UC1701AddressSet((ucLine*2)+1,(129-(ucRow*8)-i));
+        UC1701AddressSet((ucLine*2)+1,(127-(ucRow*8)-i));
         uctemp=Ascii[k+i+8];
         UC1701DataWrite(uctemp);
     }  
@@ -563,13 +572,13 @@ void UC1701InverseDispaly(unsigned char ucLine, unsigned char ucRow,
     
     for(i=0;i<8;i++)
     {
-        UC1701AddressSet((ucLine*2),(129-(ucRow*8)-i));
+        UC1701AddressSet((ucLine*2),(127-(ucRow*8)-i));
         uctemp=~Ascii[k+i];
         UC1701DataWrite(uctemp);
     }  
     for(i=0;i<8;i++)
     {
-        UC1701AddressSet((ucLine*2)+1,(129-(ucRow*8)-i));
+        UC1701AddressSet((ucLine*2)+1,(127-(ucRow*8)-i));
         uctemp=~Ascii[k+i+8];
         UC1701DataWrite(uctemp);
     } 
@@ -631,12 +640,12 @@ void UC1701ChineseDispaly(unsigned char ucLine, unsigned char ucRow,
     {
         for(i=0;i<16;i++)
         {
-            UC1701AddressSet((ucLine*2),(129-(ucRow*8)-i));
+            UC1701AddressSet((ucLine*2),(127-(ucRow*8)-i));
             UC1701DataWrite(pcChar[j*32+i]);
         }  
         for(i=0;i<16;i++)
         {
-            UC1701AddressSet((ucLine*2)+1,(129-(ucRow*8)-i));
+            UC1701AddressSet((ucLine*2)+1,(127-(ucRow*8)-i));
             UC1701DataWrite(pcChar[j*32+16+i]);
         }  
         ucRow = ucRow +2;
