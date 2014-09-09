@@ -10,13 +10,11 @@
 //! Copyright (c) 2009-2011 CooCox.  All rights reserved.
 //
 //*****************************************************************************
-extern void GPIO_Example_LED_Blink(void);
+
 
 int main(void)
 {
-    GPIO_Example_LED_Blink();
-	
-    while (1)
+	while (1)
     {
     }
 }

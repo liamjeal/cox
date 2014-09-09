@@ -52,7 +52,7 @@
     defined(ewarm) || defined(__ICCARM__) ||                                   \
     defined(rvmdk) || defined(__ARMCC_VERSION)
 #else
-#error Sorry, This Code can't support your compiler platform Now!
+#error Sorry, This Code can't support your compiler platform Now! '
 #endif
 
 //*****************************************************************************

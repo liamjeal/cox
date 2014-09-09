@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Project version="2G - 1.7.4" name="GPIO">
+  <Target name="GPIO" isCurrent="1">
+    <Device manufacturerId="9" manufacturerName="ST" chipId="321" chipName="STM32F103VB" boardId="" boardName=""/>
+    <BuildOption>
+      <Compile>
+        <Option name="OptimizationLevel" value="0"/>
+        <Option name="UseFPU" value="0"/>
+        <Option name="UserEditCompiler" value=""/>
+        <Includepaths>
+          <Includepath path="."/>
+          <Includepath path="../../../.."/>
+        </Includepaths>
+        <DefinedSymbols>
+          <Define name="LPC_175x"/>
+        </DefinedSymbols>
+      </Compile>
+      <Link useDefault="0">
+        <Option name="DiscardUnusedSection" value="0"/>
+        <Option name="UserEditLinkder" value=""/>
+        <Option name="UseMemoryLayout" value="0"/>
+        <Option name="Library" value="Not use C Library"/>
+        <LinkedLibraries/>
+        <MemoryAreas debugInFlashNotRAM="1">
+          <Memory name="IROM1" type="ReadOnly" size="0x00020000" startValue="0x08000000"/>
+          <Memory name="IRAM1" type="ReadWrite" size="0x00005000" startValue="0x20000000"/>
+          <Memory name="IROM2" type="ReadOnly" size="" startValue=""/>
+          <Memory name="IRAM2" type="ReadWrite" size="" startValue=""/>
+        </MemoryAreas>
+        <LocateLinkFile path="./arm-gcc-link.ld" type="0"/>
+      </Link>
+      <Output>
+        <Option name="OutputFileType" value="0"/>
+        <Option name="Path" value="E:/cox/CoX/CoX_Peripheral/CoX_Peripheral_LPC17xx/gpio/example/GPIO_Example_LED_Blink/CoIDE/"/>
+        <Option name="Name" value="GPIO"/>
+        <Option name="HEX" value="1"/>
+        <Option name="BIN" value="1"/>
+      </Output>
+      <User>
+        <UserRun name="Run#1" type="Before" checked="0" value=""/>
+        <UserRun name="Run#1" type="After" checked="0" value=""/>
+      </User>
+    </BuildOption>
+    <DebugOption>
+      <Option name="org.coocox.codebugger.gdbjtag.core.adapter" value="ST-Link"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.debugMode" value="SWD"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.clockDiv" value="1M"/>
+      <Option name="org.coocox.codebugger.gdbjtag.corerunToMain" value="1"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.jlinkgdbserver" value=""/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.userDefineGDBScript" value=""/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.targetEndianess" value="0"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.jlinkResetMode" value="Type 0: Normal"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.resetMode" value="SYSRESETREQ"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.ifSemihost" value="0"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.ifCacheRom" value="1"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.ipAddress" value="127.0.0.1"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.portNumber" value="2009"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.autoDownload" value="1"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.verify" value="1"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.downloadFuction" value="Erase Effected"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.defaultAlgorithm" value="STM32F10x_MD_128.elf"/>
+    </DebugOption>
+    <ExcludeFile/>
+  </Target>
+  <Components path="./"/>
+  <Files>
+    <File name="libcox/xsysctl.h" path="../../../../libcox/xsysctl.h" type="1"/>
+    <File name="libcox/xgpio.c" path="../../../../libcox/xgpio.c" type="1"/>
+    <File name="libcox/xhw_types.h" path="../../../../libcox/xhw_types.h" type="1"/>
+    <File name="libcox/xcore.c" path="../../../../libcox/xcore.c" type="1"/>
+    <File name="libcox/xdebug.c" path="../../../../libcox/xdebug.c" type="1"/>
+    <File name="cox" path="" type="2"/>
+    <File name="libcox/xhw_gpio.h" path="../../../../libcox/xhw_gpio.h" type="1"/>
+    <File name="libcox/xcore.h" path="../../../../libcox/xcore.h" type="1"/>
+    <File name="libcox/xdebug.h" path="../../../../libcox/xdebug.h" type="1"/>
+    <File name="libcox" path="" type="2"/>
+    <File name="libcox/xhw_nvic.h" path="../../../../libcox/xhw_nvic.h" type="1"/>
+    <File name="startup/src" path="" type="2"/>
+    <File name="startup/src/startup_coide.c" path="../../../../startup/src/startup_coide.c" type="1"/>
+    <File name="startup" path="" type="2"/>
+    <File name="cox/xgpio.h" path="../../../../../CoX_Peripheral_Template/inc/xgpio.h" type="1"/>
+    <File name="libcox/xhw_memmap.h" path="../../../../libcox/xhw_memmap.h" type="1"/>
+    <File name="libcox/gpio.h" path="../../../../libcox/gpio.h" type="1"/>
+    <File name="libcox/xsysctl.c" path="../../../../libcox/xsysctl.c" type="1"/>
+    <File name="libcox/xhw_ints.h" path="../../../../libcox/xhw_ints.h" type="1"/>
+    <File name="libcox/xhw_sysctl.h" path="../../../../libcox/xhw_sysctl.h" type="1"/>
+    <File name="main.c" path="../main.c" type="1"/>
+  </Files>
+</Project>

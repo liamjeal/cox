@@ -85,57 +85,6 @@ static unsigned long PinIDToPos(unsigned long ulPin)
 
 //*****************************************************************************
 //
-//! \brief  Set the direction and mode of the specified pin(s).
-//!         This function will set the specified pin(s) on the selected GPIO
-//!         port as either an input or output under software control, or it
-//!         will set the pin to be under hardware control.
-//!
-//! \param  [in] ulPort is the base address of the GPIO port, this value can
-//!              be one of the following value:
-//!              - \ref GPIOA_BASE
-//!              - \ref GPIOB_BASE
-//!              - ...
-//!              More Information, please refer to \ref xLowLayer_Peripheral_Memmap.
-//!
-//! \param  [in] ulPins is the bit-packed representation of the pin(s).
-//!              elemnt can be one of the following value:
-//!              - \ref GPIO_PIN0
-//!              - \ref GPIO_PIN1
-//!              - \ref ...
-//!              More Information, please refer to \ref xGPIO_General_Pin_IDs.
-//!
-//! \param  [in] ulPinIO is the pin direction and/or mode.
-//!              This parameter can be one of the following value:
-//!              Where \ref xGPIO_DIR_MODE_IN specifies that the pin will be
-//!              programmed a software controlled input, \ref xGPIO_DIR_MODE_OUT
-//!              specifies that the pin will be programmed as a software
-//!              controlled output, and \ref xGPIO_DIR_MODE_HW specifies that
-//!              the pin will be placed under hardware control.
-//!
-//! \return None.
-//!
-//! \note   \ref xGPIOPadConfigSet() must also be used to configure the corresponding
-//!         pad(s) in order for them to propagate the signal to/from the GPIO.
-//
-//*****************************************************************************
-void xGPIODirModeSet(unsigned long ulPort, unsigned long ulPins, unsigned long ulPinIO)
-{
-    unsigned long i = 0;
-
-    for(i = 0; i < 32; i++)
-    {
-        if(ulPins & (0x01 << i))
-        {
-            if(0 != ulPinIO)
-            {
-                GPIOPinModeCfg(ulPort, 0x01<<i, ulPinIO);
-            }
-        }
-    }
-}
-
-//*****************************************************************************
-//
 //! \brief  Get the GPIO port from a Pin.
 //!
 //! \param  [in] eShortPin is the base address of the GPIO port
@@ -217,194 +166,6 @@ unsigned long  GPIOPinToPin(unsigned long ulPort, unsigned long ulPin)
 
     return (ulPin);
 }
-
-//*****************************************************************************
-//
-//! \brief  Get the direction and mode of a pin.
-//!         This function gets the direction and control mode for a specified
-//!         pin on the selected GPIO port.  The pin can be configured as either
-//!         an input or output under software control, or it can be under
-//!         hardware control. The type of control and direction are returned
-//!         as an enumerated data type.
-//!
-//! \param  [in] ulPort is the base address of the GPIO port
-//! \param  [in] ulPin is the bit-packed representation of the pin.
-//!
-//! \return Returns one of the enumerated data types
-//!         - \ref xGPIO_DIR_MODE_IN
-//!         - \ref xGPIO_DIR_MODE_OUT
-//!         - \ref xGPIO_DIR_MODE_HW
-//!         - \ref xGPIO_DIR_MODE_QB
-//!         - \ref xGPIO_DIR_MODE_OD
-//
-//*****************************************************************************
-unsigned long xGPIODirModeGet(unsigned long ulPort, unsigned long ulPin)
-{
-    //! \todo Finish this function.
-    return (0);
-}
-
-//*****************************************************************************
-//
-//! \brief  Register user interrupts callback function  for the GPIO.
-//!
-//! \param  [in] ulPort is the base address of the GPIO port
-//! \param  [in] ulPin is the bit-packed representation of the pin.
-//!
-//! \param  [in] xtPortCallback is user callback for the GPIO.
-//!
-//! \return None.
-//
-//*****************************************************************************
-void xGPIOPinIntCallbackInit(unsigned long ulPort, unsigned long ulPin,
-                                   xtEventCallback xtPortCallback)
-{
-    unsigned long PinNum = PinIDToPos(ulPin);
-
-    if(GPIOA_BASE == ulPort)
-    {
-        g_psGPIOPinIntAssignTable[PinNum] = xtPortCallback;
-    }
-    else if(GPIOC_BASE == ulPort)
-    {
-        PinNum += 32;
-        g_psGPIOPinIntAssignTable[PinNum] = xtPortCallback;
-    }
-    else           // Error
-    {
-        while(1);
-    }
-
-}
-
-//*****************************************************************************
-//
-//! \brief  Set the interrupt type and Enable interrupt for the specified pin(s).
-//!         This function sets up the various interrupt trigger mechanisms for the
-//!         specified pin(s) on the selected GPIO port.
-//!
-//! \param  [in] ulPort is the base address of the GPIO port
-//! \param  [in] ulPins is the bit-packed representation of the pin(s).
-//! \param  [in] ulIntType specifies the type of interrupt trigger mechanism.
-//!
-//! \return None.
-//!
-//! \note   In order to avoid any spurious interrupts, the user must ensure that
-//!         the GPIO inputs remain stable for the duration of this function.
-//
-//*****************************************************************************
-void xGPIOPinIntEnable(unsigned long ulPort, unsigned long ulPins, unsigned long ulIntType)
-{
-    unsigned long i = 0;
-
-    for(i = 0; i < 32; i++)
-    {
-        if(ulPins & (0x01 << i))
-        {
-            GPIOPinIntCfg(ulPort, (0x01 << i), ulIntType);
-            GPIOPinIntEnable(ulPort, (0x01 << i));
-        }
-    }
-}
-
-//*****************************************************************************
-//
-//! \brief  Disables interrupts for the specified pin(s).
-//!
-//! \param  [in] ulPort is the base address of the GPIO port
-//! \param  [in] ulPins is the bit-packed representation of the pin(s).
-//!
-//! \return None.
-//
-//*****************************************************************************
-void xGPIOPinIntDisable(unsigned long ulPort, unsigned long ulPins)
-{
-    unsigned long i = 0;
-
-    for(i = 0; i < 32; i++)
-    {
-        if(ulPins & (0x01 << i))
-        {
-            GPIOPinIntDisable(ulPort, (0x01 << i));
-        }
-    }
-}
-
-//*****************************************************************************
-//
-//! \brief  Clear the interrupt for the specified pin(s).
-//!
-//! \param  [in] ulPort is the base address of the GPIO port
-//! \param  [in] ulPins is the bit-packed representation of the pin(s).
-//!
-//! \return None.
-//!
-//! \note   Because there is a write buffer in the Cortex-M0 processor, it may
-//!         take several clock cycles before the interrupt source is actually
-//!         cleared. Therefore, it is recommended that the interrupt source
-//!         be cleared early in the interrupt handler (as opposed to the very
-//!         last action) to avoid returning from the interrupt handler before
-//!         the interrupt source i actually cleared.  Failure to do so may
-//!         result in the interrupt handler being immediately reentered (because
-//!         the interrupt controller still see the interrupt source asserted).
-//
-//*****************************************************************************
-void xGPIOPinIntClear(unsigned long ulPort, unsigned long ulPins)
-{
-    unsigned long i = 0;
-
-    for(i = 0; i < 32; i++)
-    {
-        if(ulPins & (0x01 << i))
-        {
-            GPIOPinIntFlagClear(ulPort, (0x01 << i));
-        }
-    }
-}
-
-//*****************************************************************************
-//
-//! \brief  Reads the values present of the specified pin(s).
-//!         The values at the specified pin(s) are read, as specified by \e ucPins.
-//!         Values are returned for both input and output pin(s), and the value
-//!         for pin(s) that are not specified by \e ucPins are set to 0.
-//!
-//! \param  [in] ulPort is the base address of the GPIO port
-//! \param  [in] ulPins is the bit-packed representation of the pin(s).
-//!
-//! \return Returns a bit-packed byte, where each bit that is set identifie
-//!         an active masked or raw interrupt, and where bit 0 of the byte
-//!         represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and
-//!         so on.
-//
-//*****************************************************************************
-unsigned long xGPIOPinRead(unsigned long ulPort, unsigned long ulPins)
-{
-    xHWREG(ulPort + FIOMASK) = ~ulPins;
-    return xHWREG(ulPort + FIOPIN);
-}
-
-//*****************************************************************************
-//
-//! \brief Write a value to the specified pin(s).
-//!        Write the corresponding bit values to the output pin(s) specified by
-//!        \e ucPins.  Writing to a pin configured as an input pin has no effect.
-//!
-//! \param [in] ulPort is the base address of the GPIO port
-//! \param [in] ulPins is the bit-packed representation of the pin(s).
-//! \param [in] ucVal is the value to write to the pin(s), 0 or 1.
-//!
-//! \return None.
-//
-//*****************************************************************************
-void xGPIOPinWrite(unsigned long ulPort, unsigned long ulPins,
-        unsigned long ulVal)
-{
-    xHWREG(ulPort + FIOMASK) = ~ulPins;
-    xHWREG(ulPort + FIOPIN)  =   ulVal;
-}
-
-////////////////////////////////////////////////////////////////////
 
 
 //*****************************************************************************
@@ -904,4 +665,242 @@ void GPIOPinIntFlagClear(unsigned long ulPort, unsigned long ulPin)
             }
     }
 }
+
+//*****************************************************************************
+//
+//! \brief  Set the direction and mode of the specified pin(s).
+//!         This function will set the specified pin(s) on the selected GPIO
+//!         port as either an input or output under software control, or it
+//!         will set the pin to be under hardware control.
+//!
+//! \param  [in] ulPort is the base address of the GPIO port, this value can
+//!              be one of the following value:
+//!              - \ref GPIOA_BASE
+//!              - \ref GPIOB_BASE
+//!              - ...
+//!              More Information, please refer to \ref xLowLayer_Peripheral_Memmap.
+//!
+//! \param  [in] ulPins is the bit-packed representation of the pin(s).
+//!              elemnt can be one of the following value:
+//!              - \ref GPIO_PIN0
+//!              - \ref GPIO_PIN1
+//!              - \ref ...
+//!              More Information, please refer to \ref xGPIO_General_Pin_IDs.
+//!
+//! \param  [in] ulPinIO is the pin direction and/or mode.
+//!              This parameter can be one of the following value:
+//!              Where \ref xGPIO_DIR_MODE_IN specifies that the pin will be
+//!              programmed a software controlled input, \ref xGPIO_DIR_MODE_OUT
+//!              specifies that the pin will be programmed as a software
+//!              controlled output, and \ref xGPIO_DIR_MODE_HW specifies that
+//!              the pin will be placed under hardware control.
+//!
+//! \return None.
+//!
+//! \note   \ref xGPIOPadConfigSet() must also be used to configure the corresponding
+//!         pad(s) in order for them to propagate the signal to/from the GPIO.
+//
+//*****************************************************************************
+void xGPIODirModeSet(unsigned long ulPort, unsigned long ulPins, unsigned long ulPinIO)
+{
+    unsigned long i = 0;
+
+    for(i = 0; i < 32; i++)
+    {
+        if(ulPins & (0x01 << i))
+        {
+            if(0 != ulPinIO)
+            {
+                GPIOPinModeCfg(ulPort, 0x01<<i, ulPinIO);
+            }
+        }
+    }
+}
+
+//*****************************************************************************
+//
+//! \brief  Get the direction and mode of a pin.
+//!         This function gets the direction and control mode for a specified
+//!         pin on the selected GPIO port.  The pin can be configured as either
+//!         an input or output under software control, or it can be under
+//!         hardware control. The type of control and direction are returned
+//!         as an enumerated data type.
+//!
+//! \param  [in] ulPort is the base address of the GPIO port
+//! \param  [in] ulPin is the bit-packed representation of the pin.
+//!
+//! \return Returns one of the enumerated data types
+//!         - \ref xGPIO_DIR_MODE_IN
+//!         - \ref xGPIO_DIR_MODE_OUT
+//!         - \ref xGPIO_DIR_MODE_HW
+//!         - \ref xGPIO_DIR_MODE_QB
+//!         - \ref xGPIO_DIR_MODE_OD
+//
+//*****************************************************************************
+unsigned long xGPIODirModeGet(unsigned long ulPort, unsigned long ulPin)
+{
+    //! \todo Finish this function.
+    return (0);
+}
+
+//*****************************************************************************
+//
+//! \brief  Register user interrupts callback function  for the GPIO.
+//!
+//! \param  [in] ulPort is the base address of the GPIO port
+//! \param  [in] ulPin is the bit-packed representation of the pin.
+//!
+//! \param  [in] xtPortCallback is user callback for the GPIO.
+//!
+//! \return None.
+//
+//*****************************************************************************
+void xGPIOPinIntCallbackInit(unsigned long ulPort, unsigned long ulPin,
+                                   xtEventCallback xtPortCallback)
+{
+    unsigned long PinNum = PinIDToPos(ulPin);
+
+    if(GPIOA_BASE == ulPort)
+    {
+        g_psGPIOPinIntAssignTable[PinNum] = xtPortCallback;
+    }
+    else if(GPIOC_BASE == ulPort)
+    {
+        PinNum += 32;
+        g_psGPIOPinIntAssignTable[PinNum] = xtPortCallback;
+    }
+    else           // Error
+    {
+        while(1);
+    }
+}
+
+//*****************************************************************************
+//
+//! \brief  Set the interrupt type and Enable interrupt for the specified pin(s).
+//!         This function sets up the various interrupt trigger mechanisms for the
+//!         specified pin(s) on the selected GPIO port.
+//!
+//! \param  [in] ulPort is the base address of the GPIO port
+//! \param  [in] ulPins is the bit-packed representation of the pin(s).
+//! \param  [in] ulIntType specifies the type of interrupt trigger mechanism.
+//!
+//! \return None.
+//!
+//! \note   In order to avoid any spurious interrupts, the user must ensure that
+//!         the GPIO inputs remain stable for the duration of this function.
+//
+//*****************************************************************************
+void xGPIOPinIntEnable(unsigned long ulPort, unsigned long ulPins, unsigned long ulIntType)
+{
+    unsigned long i = 0;
+
+    for(i = 0; i < 32; i++)
+    {
+        if(ulPins & (0x01 << i))
+        {
+            GPIOPinIntCfg(ulPort, (0x01 << i), ulIntType);
+            GPIOPinIntEnable(ulPort, (0x01 << i));
+        }
+    }
+}
+
+//*****************************************************************************
+//
+//! \brief  Disables interrupts for the specified pin(s).
+//!
+//! \param  [in] ulPort is the base address of the GPIO port
+//! \param  [in] ulPins is the bit-packed representation of the pin(s).
+//!
+//! \return None.
+//
+//*****************************************************************************
+void xGPIOPinIntDisable(unsigned long ulPort, unsigned long ulPins)
+{
+    unsigned long i = 0;
+
+    for(i = 0; i < 32; i++)
+    {
+        if(ulPins & (0x01 << i))
+        {
+            GPIOPinIntDisable(ulPort, (0x01 << i));
+        }
+    }
+}
+
+//*****************************************************************************
+//
+//! \brief  Clear the interrupt for the specified pin(s).
+//!
+//! \param  [in] ulPort is the base address of the GPIO port
+//! \param  [in] ulPins is the bit-packed representation of the pin(s).
+//!
+//! \return None.
+//!
+//! \note   Because there is a write buffer in the Cortex-M0 processor, it may
+//!         take several clock cycles before the interrupt source is actually
+//!         cleared. Therefore, it is recommended that the interrupt source
+//!         be cleared early in the interrupt handler (as opposed to the very
+//!         last action) to avoid returning from the interrupt handler before
+//!         the interrupt source i actually cleared.  Failure to do so may
+//!         result in the interrupt handler being immediately reentered (because
+//!         the interrupt controller still see the interrupt source asserted).
+//
+//*****************************************************************************
+void xGPIOPinIntClear(unsigned long ulPort, unsigned long ulPins)
+{
+    unsigned long i = 0;
+
+    for(i = 0; i < 32; i++)
+    {
+        if(ulPins & (0x01 << i))
+        {
+            GPIOPinIntFlagClear(ulPort, (0x01 << i));
+        }
+    }
+}
+
+//*****************************************************************************
+//
+//! \brief  Reads the values present of the specified pin(s).
+//!         The values at the specified pin(s) are read, as specified by \e ucPins.
+//!         Values are returned for both input and output pin(s), and the value
+//!         for pin(s) that are not specified by \e ucPins are set to 0.
+//!
+//! \param  [in] ulPort is the base address of the GPIO port
+//! \param  [in] ulPins is the bit-packed representation of the pin(s).
+//!
+//! \return Returns a bit-packed byte, where each bit that is set identifie
+//!         an active masked or raw interrupt, and where bit 0 of the byte
+//!         represents GPIO port pin 0, bit 1 represents GPIO port pin 1, and
+//!         so on.
+//
+//*****************************************************************************
+unsigned long xGPIOPinRead(unsigned long ulPort, unsigned long ulPins)
+{
+    xHWREG(ulPort + FIOMASK) = ~ulPins;
+    return xHWREG(ulPort + FIOPIN);
+}
+
+//*****************************************************************************
+//
+//! \brief Write a value to the specified pin(s).
+//!        Write the corresponding bit values to the output pin(s) specified by
+//!        \e ucPins.  Writing to a pin configured as an input pin has no effect.
+//!
+//! \param [in] ulPort is the base address of the GPIO port
+//! \param [in] ulPins is the bit-packed representation of the pin(s).
+//! \param [in] ucVal is the value to write to the pin(s), 0 or 1.
+//!
+//! \return None.
+//
+//*****************************************************************************
+void xGPIOPinWrite(unsigned long ulPort, unsigned long ulPins,
+        unsigned long ulVal)
+{
+    xHWREG(ulPort + FIOMASK) = ~ulPins;
+    xHWREG(ulPort + FIOPIN)  =   ulVal;
+}
+
+////////////////////////////////////////////////////////////////////
 
