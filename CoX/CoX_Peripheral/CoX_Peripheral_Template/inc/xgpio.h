@@ -42,7 +42,6 @@
 #define __XGPIO_H__
 
 #include "gpio.h"
-#include "xPort.h"
 
 
 //*****************************************************************************
@@ -323,7 +322,7 @@ extern "C"
 //
 //! Interrupt on falling edge
 //
-#define xGPIO_FALLING_EDGE      GPIO_RISING_EDGE
+#define xGPIO_FALLING_EDGE      GPIO_FALLING_EDGE
 
 //
 //! Interrupt on rising edge
@@ -411,59 +410,32 @@ extern "C"
 //! +------------------------+----------------+
 //! |xGPIO Pad Type          |       CoX      |
 //! |------------------------|----------------|
-//! |xGPIO_PIN_TYPE_STD      |  Non-Mandatory |
+//! |xGPIO_PIN_TYPE_PU       |  Non-Mandatory |
 //! |------------------------|----------------|
-//! |xGPIO_PIN_TYPE_STD_WPU  |  Non-Mandatory |
+//! |xGPIO_PIN_TYPE_PD       |  Non-Mandatory |
 //! |------------------------|----------------|
-//! |xGPIO_PIN_TYPE_OD       |  Non-Mandatory |
+//! |xGPIO_PIN_TYPE_NP       |  Non-Mandatory |
 //! |------------------------|----------------|
-//! |xGPIO_PIN_TYPE_OD_WPU   |  Non-Mandatory |
-//! |------------------------|----------------|
-//! |xGPIO_PIN_TYPE_OD_WPD   |  Non-Mandatory |
-//! |------------------------|----------------|
-//! |xGPIO_PIN_TYPE_ANALOG   |  Non-Mandatory |
-//! |------------------------|----------------|
-//! |xGPIO_PIN_TYPE_STD_WPD  |  Non-Mandatory |
-//! +------------------------+----------------+
+//!
 //! \endverbatim
 //! @{
 //
 //*****************************************************************************
 
 //
-//! Push-pull
+//! Pull up
 //
-#define xGPIO_PIN_TYPE_STD      GPIO_PIN_TYPE_STD
+#define xGPIO_PIN_TYPE_PU       GPIO_PIN_TYPE_PU
 
 //
-//! Push-pull with weak pull-up
+//! Pull down
 //
-#define xGPIO_PIN_TYPE_STD_WPU  GPIO_PIN_TYPE_STD_WPU
+#define xGPIO_PIN_TYPE_PD       GPIO_PIN_TYPE_PD
 
 //
-//! Push-pull with weak pull-down
 //
-#define xGPIO_PIN_TYPE_STD_WPD  GPIO_PIN_TYPE_STD_WPD
+#define xGPIO_PIN_TYPE_NP       GPIO_PIN_TYPE_NP
 
-//
-//! Open-drain
-//
-#define xGPIO_PIN_TYPE_OD       GPIO_PIN_TYPE_OD
-
-//
-//! Open-drain with weak pull-up
-//
-#define xGPIO_PIN_TYPE_OD_WPU   GPIO_PIN_TYPE_OD_WPU
-
-//
-//! Open-drain with weak pull-down
-//
-#define xGPIO_PIN_TYPE_OD_WPD   GPIO_PIN_TYPE_OD_WPD
-
-//
-//! Analog(ADC/ACMP Input)
-//
-#define xGPIO_PIN_TYPE_ANALOG   GPIO_PIN_TYPE_ANALOG
 
 //*****************************************************************************
 //
