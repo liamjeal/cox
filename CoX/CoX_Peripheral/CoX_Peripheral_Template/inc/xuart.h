@@ -2,8 +2,8 @@
 //
 //! \file xuart.h
 //! \brief Prototypes for the UART Driver.
-//! \version V2.2
-//! \date 5/17/2012
+//! \version V3.0
+//! \date 9/9/2014
 //! \author CooCox
 //! \copy
 //!
@@ -41,7 +41,6 @@
 #define __xUART_H__
 
 #include "uart.h"
-#include "xPort.h"
 
 //*****************************************************************************
 //

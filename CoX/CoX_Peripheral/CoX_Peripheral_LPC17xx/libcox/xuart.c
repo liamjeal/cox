@@ -33,13 +33,14 @@ static xtEventCallback g_pfnUARTHandlerCallbacks[4] = {0};
 //*****************************************************************************
 #ifdef xDEBUG
 static xtBoolean
-SPIBaseValid(unsigned long ulPort)
+UARTBaseValid(unsigned long ulPort)
 {
     return((ulPort == UART0_BASE) ||
            (ulPort == UART1_BASE) ||
 		   (ulBase == UART2_BASE) ||
 		   (ulBase == UART3_BASE));
 }
+#endif
 
 //*****************************************************************************
 //
@@ -158,7 +159,7 @@ static xtBoolean UartSetDivisors(unsigned long ulBase, unsigned long ulBaudrate)
     unsigned long long best_divisor  = 0;
     unsigned long long divisor       = 0;
 
-    xASSERT(SPIBaseValid(ulBase));
+    xASSERT(UARTBaseValid(ulBase));
 
     switch(ulBase)
     {
@@ -313,7 +314,7 @@ unsigned char UARTByteRead(unsigned long ulBase)
     unsigned long ulTmpReg = 0;
 
     // Check input parameters.
-    xASSERT(SPIBaseValid(ulBase));
+    xASSERT(UARTBaseValid(ulBase));
 
     // DLAB MUST be zero.
     xHWREG(ulBase + LCR) &= ~LCR_DLAB;
@@ -354,7 +355,7 @@ void UARTByteWrite(unsigned long ulBase, unsigned char ucData)
     unsigned long ulTmpReg = 0;
 
     // Check input parameters.
-    xASSERT(SPIBaseValid(ulBase));
+    xASSERT(UARTBaseValid(ulBase));
 
     // DLAB MUST be zero.
     xHWREG(ulBase + LCR) &= ~LCR_DLAB;
@@ -388,10 +389,10 @@ void UARTByteWrite(unsigned long ulBase, unsigned char ucData)
 //! \note   This function will continue transmit until meet '\0' in string.
 //
 //*****************************************************************************
-void UARTStrSend(unsigned long ulBase, unsigned char * pStr)
+void UARTStrSend(unsigned long ulBase, unsigned char *pStr)
 {
     // Check input parameters.
-    xASSERT(SPIBaseValid(ulBase));
+    xASSERT(UARTBaseValid(ulBase));
 
     while(NULL != *pStr)
     {
@@ -422,7 +423,7 @@ void UARTBufWrite(unsigned long ulBase, unsigned char * pBuf, unsigned long ulLe
     unsigned long i = 0;
 
     // Check input parameters.
-    xASSERT(SPIBaseValid(ulBase));
+    xASSERT(UARTBaseValid(ulBase));
 
     for(i = 0; i < ulLen; i++)
     {
@@ -453,7 +454,7 @@ void UARTBufRead(unsigned long ulBase, unsigned char * pBuf, unsigned long ulLen
     unsigned long i = 0;
 
     // Check input parameters.
-    xASSERT(SPIBaseValid(ulBase));
+    xASSERT(UARTBaseValid(ulBase));
 
     for(i = 0; i < ulLen; i++)
     {
@@ -487,7 +488,7 @@ unsigned long UARTIntStatusGet(unsigned long ulBase)
 {
 
     // Check input parameters.
-    xASSERT(SPIBaseValid(ulBase));
+    xASSERT(UARTBaseValid(ulBase));
 
     // Read status register.
     return xHWREG(ulBase + IIR);
@@ -524,7 +525,7 @@ xtBoolean UARTIntStatusCheck(unsigned long ulBase, unsigned long ulIntFlags)
     unsigned long ulTmpReg = 0;
 
     // Check input parameters.
-    xASSERT(SPIBaseValid(ulBase));
+    xASSERT(UARTBaseValid(ulBase));
 
     xASSERT( (ulIntFlags & ~(
                                  INT_FLAG_RLS  |
@@ -607,7 +608,7 @@ xtBoolean UARTIntStatusCheck(unsigned long ulBase, unsigned long ulIntFlags)
 void UARTIntFlagClear(unsigned long ulBase, unsigned long ulIntFlags)
 {
     // Check input parameters.
-    xASSERT(SPIBaseValid(ulBase));
+    xASSERT(UARTBaseValid(ulBase));
     xASSERT( (ulIntFlags & ~(INT_ABEO | INT_ABTO)) == 0);
 
     switch(ulIntFlags)
@@ -659,7 +660,7 @@ void UARTFIFOCfg(unsigned long ulBase, unsigned long ulCfg)
     unsigned long ulTmpReg = 0;
 
     // Check input parameters.
-    xASSERT(SPIBaseValid(ulBase));
+    xASSERT(UARTBaseValid(ulBase));
 
     xASSERT( (ulCfg & ~(
                              FIFO_CFG_FIFO_EN       |
@@ -699,7 +700,7 @@ void UARTFIFOCfg(unsigned long ulBase, unsigned long ulCfg)
 void UARTTransStart(unsigned long ulBase)
 {
     // Check input parameters.
-    xASSERT(SPIBaseValid(ulBase));
+    xASSERT(UARTBaseValid(ulBase));
 
     xHWREG(ulBase + TER) |= TER_TX_EN;
 }
@@ -721,7 +722,7 @@ void UARTTransStart(unsigned long ulBase)
 void UARTTransStop(unsigned long ulBase)
 {
     // Check input parameters.
-    xASSERT(SPIBaseValid(ulBase));
+    xASSERT(UARTBaseValid(ulBase));
 
     xHWREG(ulBase + TER) &= ~TER_TX_EN;
 }
@@ -757,7 +758,7 @@ xtBoolean UARTStatCheck(unsigned long ulBase, unsigned long ulFlags)
 {
 
     // Check input parameters.
-    xASSERT(SPIBaseValid(ulBase));
+    xASSERT(UARTBaseValid(ulBase));
     xASSERT( (ulFlags & ~(
                               RX_FIFO_NOT_EMPTY |
                               OVERRUN_ERR       |
@@ -814,7 +815,7 @@ void UARTIrDACfg(unsigned long ulBase, unsigned long ulCfg)
     unsigned long ulTmpReg = 0;
 
     // Check input parameters.
-    xASSERT(SPIBaseValid(ulBase));
+    xASSERT(UARTBaseValid(ulBase));
     xASSERT( (ulCfg & ~(
                            IRDA_INV_EN        |
                            IRDA_INV_DIS       |
@@ -876,7 +877,7 @@ void UARTIrDAEnable(unsigned long ulBase)
 //*****************************************************************************
 void UARTIrDADisable(unsigned long ulBase)
 {
-    xASSERT(SPIBaseValid(ulBase));
+    xASSERT(UARTBaseValid(ulBase));
     xHWREG(ulBase + ICR) &= ~ICR_IRDA_EN;
 }
 
@@ -1106,8 +1107,8 @@ xUARTConfigSet(unsigned long ulBase, unsigned long ulBaud, unsigned long ulConfi
     unsigned long ulTmpReg = 0;
 
     // Check input parameters.
-    xASSERT(SPIBaseValid(ulBase));;
-    xASSERT( (ulCfg & ~(
+    xASSERT(UARTBaseValid(ulBase));;
+    xASSERT( (ulConfig & ~(
                            UART_CFG_LEN_5_BIT   |
                            UART_CFG_LEN_6_BIT   |
                            UART_CFG_LEN_7_BIT   |
@@ -1126,8 +1127,8 @@ xUARTConfigSet(unsigned long ulBase, unsigned long ulBaud, unsigned long ulConfi
 
     // Configure UART Data length, Parity, stop bit, break.
     ulTmpReg = xHWREG(ulBase + LCR);
-    ulTmpReg &= ((~ulCfg) >> 16);
-    ulTmpReg |= (ulCfg & 0xFFFF);
+    ulTmpReg &= ((~ulConfig) >> 16);
+    ulTmpReg |= (ulConfig & 0xFFFF);
     xHWREG(ulBase + LCR) = ulTmpReg;
 
     // Configure UART baud
@@ -1154,7 +1155,7 @@ xUARTConfigSet(unsigned long ulBase, unsigned long ulBaud, unsigned long ulConfi
 //*****************************************************************************
 long xUARTCharGetNonBlocking(unsigned long ulBase)
 {
-    xASSERT(SPIBaseValid(ulBase));
+    xASSERT(UARTBaseValid(ulBase));
     // DLAB MUST be zero.
     xHWREG(ulBase + LCR) &= ~LCR_DLAB;
 
@@ -1185,8 +1186,8 @@ long xUARTCharGetNonBlocking(unsigned long ulBase)
 //
 //*****************************************************************************
 long xUARTCharGet(unsigned long ulBase)
-
-    xASSERT(SPIBaseValid(ulBase));
+{
+    xASSERT(UARTBaseValid(ulBase));
 	return UARTByteRead(ulBase);
 
 }
@@ -1216,7 +1217,7 @@ xtBoolean xUARTCharPutNonBlocking(unsigned long ulBase, unsigned char ucData)
     unsigned long ulTmpReg = 0;
 
     // Check input parameters.
-    xASSERT(SPIBaseValid(ulBase));
+    xASSERT(UARTBaseValid(ulBase));
 
     // DLAB MUST be zero.
     xHWREG(ulBase + LCR) &= ~LCR_DLAB;
@@ -1250,8 +1251,8 @@ xtBoolean xUARTCharPutNonBlocking(unsigned long ulBase, unsigned char ucData)
 //
 //*****************************************************************************
 void xUARTCharPut(unsigned long ulBase, unsigned char ucData)
-
-    xASSERT(SPIBaseValid(ulBase));
+{
+    xASSERT(UARTBaseValid(ulBase));
 	UARTByteWrite(ulBase, ucData);
 }
 
@@ -1279,7 +1280,7 @@ void xUARTCharPut(unsigned long ulBase, unsigned char ucData)
 void xUARTIntEnable(unsigned long ulBase, unsigned long ulIntFlags)
 {
     // Check input parameters.
-    xASSERT(SPIBaseValid(ulBase));
+    xASSERT(UARTBaseValid(ulBase));
 
     xASSERT( (ulIntFlags & ~(
                             INT_RDA   |
@@ -1315,7 +1316,7 @@ void xUARTIntEnable(unsigned long ulBase, unsigned long ulIntFlags)
 void xUARTIntCallbackInit(unsigned long ulBase, xtEventCallback xtUARTCallback)
 {
     // Check the parameters.
-    xASSERT(SPIBaseValid(ulBase));
+    xASSERT(UARTBaseValid(ulBase));
     xASSERT(pfnCallback != 0);
 
     // Register user call back function.
@@ -1323,25 +1324,25 @@ void xUARTIntCallbackInit(unsigned long ulBase, xtEventCallback xtUARTCallback)
     {
         case UART0_BASE:
             {
-                g_pfnUARTHandlerCallbacks[0] = pfnCallback;
+                g_pfnUARTHandlerCallbacks[0] = xtUARTCallback;
                 break;
             }
 
         case UART1_BASE:
             {
-                g_pfnUARTHandlerCallbacks[1] = pfnCallback;
+                g_pfnUARTHandlerCallbacks[1] = xtUARTCallback;
                 break;
             }
 
         case UART2_BASE:
             {
-                g_pfnUARTHandlerCallbacks[2] = pfnCallback;
+                g_pfnUARTHandlerCallbacks[2] = xtUARTCallback;
                 break;
             }
 
         case UART3_BASE:
             {
-                g_pfnUARTHandlerCallbacks[3] = pfnCallback;
+                g_pfnUARTHandlerCallbacks[3] = xtUARTCallback;
                 break;
             }
     }
@@ -1375,7 +1376,7 @@ void xUARTIntCallbackInit(unsigned long ulBase, xtEventCallback xtUARTCallback)
 void xUARTIntDisable(unsigned long ulBase, unsigned long ulIntFlags)
 {
     // Check input parameters.
-    xASSERT(SPIBaseValid(ulBase));
+    xASSERT(UARTBaseValid(ulBase));
 
     xASSERT( (ulIntFlags & ~(
                             INT_RDA     |
@@ -1415,7 +1416,7 @@ void xUARTIntDisable(unsigned long ulBase, unsigned long ulIntFlags)
 unsigned long xUARTRxErrorGet(unsigned long ulBase)
 {
     // Check input parameters.
-    xASSERT(SPIBaseValid(ulBase));
+    xASSERT(UARTBaseValid(ulBase));
 
     return( xHWREG(ulBase + LSR) );
 }
@@ -1437,7 +1438,7 @@ unsigned long xUARTRxErrorGet(unsigned long ulBase)
 void xUARTRxErrorClear(unsigned long ulBase)
 {
     // Check input parameters.
-    xASSERT(SPIBaseValid(ulBase));
+    xASSERT(UARTBaseValid(ulBase));
 
     return( xHWREG(ulBase + LSR) );
 }
