@@ -3,7 +3,7 @@
 //! \file xgpio.h
 //! \brief Prototypes for the GPIO Driver.
 //! \brief Prototypes for the AFIO Driver.
-//! \version V2.1.1.1
+//! \version V2.3.0.0
 //! \date 11/14/2011
 //! \author CooCox
 //! \copy
