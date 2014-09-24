@@ -10,6 +10,7 @@
 #include "xgpio.h"
 #include "xhw_pwm.h"
 #include "xpwm.h"
+#include "pwm.h"
 
 static unsigned long _PWMFrequency = 0;
 
@@ -19,6 +20,27 @@ static unsigned long _PWMFrequency = 0;
 //
 //*****************************************************************************
 static xtEventCallback g_pfnPWMHandlerCallbacks = 0;
+
+//*****************************************************************************
+//
+//! \internal
+//! Checks a pwm base address.
+//!
+//! \param ulPort is the base address of the pwm port.
+//!
+//! This function determines if a pwm port base address is valid.
+//!
+//! \return Returns \b true if the base address is valid and \b false
+//! otherwise.
+//
+//*****************************************************************************
+#ifdef xDEBUG
+static xtBoolean
+PWMBaseValid(unsigned long ulBase)
+{
+    return((ulBase == xPWM1_BASE));
+}
+#endif
 
 //*****************************************************************************
 //
@@ -37,10 +59,7 @@ void PWM1IntHandler(void)
     {
         g_pfnPWMHandlerCallbacks(0, 0, 0, 0);
     }
-    else
-    {
-        while(1);
-    }
+
 }
 
 //*****************************************************************************
@@ -85,7 +104,7 @@ void xPWMIntCallbackInit(unsigned long ulBase, xtEventCallback pfnCallback)
 void PWMPrescaleValueSet(unsigned long ulBase, unsigned long ulValue)
 {
     // Check the parameters.
-    xASSERT(ulBase == PWM1_BASE);
+    xASSERT(PWMBaseValid(ulBase));
 
     xHWREG(ulBase + PWM_PR) = ulValue;
 }
@@ -115,7 +134,7 @@ void PWMPrescaleValueSet(unsigned long ulBase, unsigned long ulValue)
 void PWMIntStatusClear(unsigned long ulBase, unsigned long ulIntFlags)
 {
     // Check input parameters.
-    xASSERT(ulBase == PWM1_BASE);
+    xASSERT(PWMBaseValid(ulBase));
     xASSERT((ulIntFlags & ~ PWM_INT_FLAG_MASK) == 0);
 
     // Clear Interrupt flag
@@ -145,7 +164,7 @@ void PWMIntStatusClear(unsigned long ulBase, unsigned long ulIntFlags)
 unsigned long PWMIntStatusGet(unsigned long ulBase)
 {
     // Check input parameters.
-    xASSERT(ulBase == PWM1_BASE);
+    xASSERT(PWMBaseValid(ulBase));
 
     return xHWREG(PWM1_BASE + PWM_IR);
 
@@ -179,7 +198,7 @@ unsigned long PWMIntStatusGet(unsigned long ulBase)
 xtBoolean PWMIntStatusCheck(unsigned long ulBase, unsigned long ulIntFlags)
 {
     // Check input parameters.
-    xASSERT(ulBase == PWM1_BASE);
+    xASSERT(PWMBaseValid(ulBase));
     xASSERT((ulIntFlags & ~ PWM_INT_FLAG_MASK) == 0);
 
     // Check flag.
@@ -207,7 +226,7 @@ xtBoolean PWMIntStatusCheck(unsigned long ulBase, unsigned long ulIntFlags)
 void PWMCounterEnable(unsigned long ulBase)
 {
     // Check input parameters.
-    xASSERT(ulBase == PWM1_BASE);
+    xASSERT(PWMBaseValid(ulBase));
 
     // Enable counter
     xHWREG(PWM1_BASE + PWM_TCR) |= TCR_CNT_EN;
@@ -227,7 +246,7 @@ void PWMCounterEnable(unsigned long ulBase)
 void PWMCounterDisable(unsigned long ulBase)
 {
     // Check input parameters.
-    xASSERT(ulBase == PWM1_BASE);
+    xASSERT(PWMBaseValid(ulBase));
 
     // Disable counter
     xHWREG(PWM1_BASE + PWM_TCR) &= ~TCR_CNT_EN;
@@ -247,7 +266,7 @@ void PWMCounterDisable(unsigned long ulBase)
 void PWMStart(unsigned long ulBase)
 {
     // Check input parameters.
-    xASSERT(ulBase == PWM1_BASE);
+    xASSERT(PWMBaseValid(ulBase));
 
     // Enable counter
     // Enable PWM mode
@@ -268,7 +287,7 @@ void PWMStart(unsigned long ulBase)
 void PWMStop(unsigned long ulBase)
 {
     // Check input parameters.
-    xASSERT(ulBase == PWM1_BASE);
+    xASSERT(PWMBaseValid(ulBase));
 
     // Disable counter
     // Enable PWM mode
@@ -289,7 +308,7 @@ void PWMStop(unsigned long ulBase)
 void PWMCounterReset(unsigned long ulBase)
 {
     // Check input parameters.
-    xASSERT(ulBase == PWM1_BASE);
+    xASSERT(PWMBaseValid(ulBase));
 
     // Reset pwm counter
     xHWREG(PWM1_BASE + PWM_TCR) |=  TCR_CNT_RST;
@@ -331,7 +350,7 @@ void PWMMatchCfg(unsigned long ulBase, unsigned long ulCh, unsigned long ulCfg)
     unsigned long ulTmpReg = 0;
 
     // Check input parameters.
-    xASSERT(ulBase == PWM1_BASE);
+    xASSERT(PWMBaseValid(ulBase));
     xASSERT( (ulCh & ~( PWM_CH_0 | PWM_CH_1 | PWM_CH_2 | PWM_CH_3 |
                        PWM_CH_4 | PWM_CH_5 | PWM_CH_6 )) == 0);
 
@@ -374,7 +393,7 @@ void PWMMatchCfg(unsigned long ulBase, unsigned long ulCh, unsigned long ulCfg)
 void PWMMatchUpdate(unsigned long ulBase, unsigned long ulCh, unsigned long ulValue)
 {
     // Check input parameters.
-    xASSERT(ulBase == PWM1_BASE);
+    xASSERT(PWMBaseValid(ulBase));
     xASSERT( (ulCh == PWM_CH_0) ||
              (ulCh == PWM_CH_1) ||
              (ulCh == PWM_CH_2) ||
@@ -437,29 +456,29 @@ void PWMMatchUpdate(unsigned long ulBase, unsigned long ulCh, unsigned long ulVa
 //!
 //! \param  [in] ulBase is the PWM base address, which can be one of the following
 //!              value:
-//!              - \ref PWM1_BASE
+//!              - \ref xPWM1_BASE
 //!
 //! \param  [in] ulCh is PWM channel, which can be the logical OR of the
 //!              following value:
-//!              - \ref PWM_CH_0
-//!              - \ref PWM_CH_1
-//!              - \ref PWM_CH_2
-//!              - \ref PWM_CH_3
-//!              - \ref PWM_CH_4
-//!              - \ref PWM_CH_5
-//!              - \ref PWM_CH_6
+//!              - \ref xPWM_CH_0
+//!              - \ref xPWM_CH_1
+//!              - \ref xPWM_CH_2
+//!              - \ref xPWM_CH_3
+//!              - \ref xPWM_CH_4
+//!              - \ref xPWM_CH_5
+//!              - \ref xPWM_CH_6
 //!
 //! \return None.
 //
 //*****************************************************************************
-void PWMOutPutEnable(unsigned long ulBase, unsigned long ulChs)
+void xPWMOutPutEnable(unsigned long ulBase, unsigned long ulChannel)
 {
     // Check input parameters.
-    xASSERT(ulBase == PWM1_BASE);
-    xASSERT( (ulChs &~ ( PWM_CH_0 | PWM_CH_1 | PWM_CH_2 | PWM_CH_3 |
-                       PWM_CH_4 | PWM_CH_5 | PWM_CH_6 )) == 0);
+        xASSERT(PWMBaseValid(ulBase));
+    xASSERT( (ulChannel &~ ( xPWM_CH_0 | xPWM_CH_1 | xPWM_CH_2 | xPWM_CH_3 |
+                       xPWM_CH_4 | xPWM_CH_5 | xPWM_CH_6 )) == 0);
 
-    xHWREG(PWM1_BASE + PWM_PCR) |= (ulChs<<8);
+    xHWREG(PWM1_BASE + PWM_PCR) |= (ulChannel<<8);
 }
 
 //*****************************************************************************
@@ -468,29 +487,29 @@ void PWMOutPutEnable(unsigned long ulBase, unsigned long ulChs)
 //!
 //! \param  [in] ulBase is the PWM base address, which can be one of the following
 //!              value:
-//!              - \ref PWM1_BASE
+//!              - \ref xPWM1_BASE
 //!
 //! \param  [in] ulCh is PWM channel, which can be the logical OR of the
 //!              following value:
-//!              - \ref PWM_CH_0
-//!              - \ref PWM_CH_1
-//!              - \ref PWM_CH_2
-//!              - \ref PWM_CH_3
-//!              - \ref PWM_CH_4
-//!              - \ref PWM_CH_5
-//!              - \ref PWM_CH_6
+//!              - \ref xPWM_CH_0
+//!              - \ref xPWM_CH_1
+//!              - \ref xPWM_CH_2
+//!              - \ref xPWM_CH_3
+//!              - \ref xPWM_CH_4
+//!              - \ref xPWM_CH_5
+//!              - \ref xPWM_CH_6
 //!
 //! \return None.
 //
 //*****************************************************************************
-void PWMOutPutDisable(unsigned long ulBase, unsigned long ulChs)
+void xPWMOutPutDisable(unsigned long ulBase, unsigned long ulChannel)
 {
      // Check input parameters.
-    xASSERT(ulBase == PWM1_BASE);
-    xASSERT( (ulChs &~ ( PWM_CH_0 | PWM_CH_1 | PWM_CH_2 | PWM_CH_3 |
-                       PWM_CH_4 | PWM_CH_5 | PWM_CH_6 )) == 0);
+        xASSERT(PWMBaseValid(ulBase));
+    xASSERT( (ulChannel &~ ( xPWM_CH_0 | xPWM_CH_1 | xPWM_CH_2 | xPWM_CH_3 |
+                       xPWM_CH_4 | xPWM_CH_5 | xPWM_CH_6 )) == 0);
 
-    xHWREG(PWM1_BASE + PWM_PCR) &= ~(ulChs<<8);
+    xHWREG(PWM1_BASE + PWM_PCR) &= ~(ulChannel<<8);
 }
 
 //*****************************************************************************
@@ -499,7 +518,7 @@ void PWMOutPutDisable(unsigned long ulBase, unsigned long ulChs)
 //!
 //! \param  [in] ulBase is the PWM base address, which can be one of the following
 //!              value:
-//!              - \ref PWM1_BASE
+//!              - \ref xPWM1_BASE
 //!
 //! \param  [in] ulCh is PWM channel, which can be the logical OR of the
 //!              following value:
@@ -664,7 +683,7 @@ void xPWMIntEnable(unsigned long ulBase, unsigned long ulChannel, unsigned long 
     (void) ulIntType;
 
     // Check input parameters.
-    xASSERT(ulBase == xPWM1_BASE);
+    xASSERT(PWMBaseValid(ulBase));
     xASSERT(ulIntType == xPWM_INT_PWM);
     xASSERT( (ulChannel == xPWM_CHANNEL0) ||
              (ulChannel == xPWM_CHANNEL1) ||
@@ -745,7 +764,7 @@ void xPWMIntDisable(unsigned long ulBase, unsigned long ulChannel, unsigned long
     (void) ulIntType;
 
     // Check input parameters.
-    xASSERT(ulBase == xPWM1_BASE);
+    xASSERT(PWMBaseValid(ulBase));
     xASSERT(ulIntType == xPWM_INT_PWM);
     xASSERT( (ulChannel == xPWM_CHANNEL0) ||
              (ulChannel == xPWM_CHANNEL1) ||
@@ -826,7 +845,7 @@ void xPWMInitConfigure(unsigned long ulBase, unsigned long ulChannel,
         unsigned long ulConfig)
 {
     // Check input parameters.
-    xASSERT(ulBase == xPWM1_BASE);
+    xASSERT(PWMBaseValid(ulBase));
     xASSERT( (ulChannel == xPWM_CHANNEL0) ||
              (ulChannel == xPWM_CHANNEL1) ||
              (ulChannel == xPWM_CHANNEL2) ||
@@ -916,7 +935,7 @@ unsigned long xPWMFrequencyConfig(unsigned long ulBase, unsigned long ulChannel,
     (void) ulChannel;
 
     // Check input parameters.
-    xASSERT(ulBase == xPWM1_BASE);
+    xASSERT(PWMBaseValid(ulBase));
     xASSERT( (ulChannel == xPWM_CHANNEL0) ||
              (ulChannel == xPWM_CHANNEL1) ||
              (ulChannel == xPWM_CHANNEL2) ||
@@ -968,7 +987,7 @@ unsigned long xPWMFrequencySet(unsigned long ulBase,unsigned long ulChannel,
     (void) ulChannel;
 
     // Check input parameters.
-    xASSERT(ulBase == xPWM1_BASE);
+    xASSERT(PWMBaseValid(ulBase));
     xASSERT( (ulChannel == xPWM_CHANNEL0) ||
              (ulChannel == xPWM_CHANNEL1) ||
              (ulChannel == xPWM_CHANNEL2) ||
@@ -1021,7 +1040,7 @@ unsigned long xPWMFrequencyGet(unsigned long ulBase, unsigned long ulChannel)
     (void) ulChannel;
 
     // Check input parameters.
-    xASSERT(ulBase == xPWM1_BASE);
+    xASSERT(PWMBaseValid(ulBase));
     xASSERT( (ulChannel == xPWM_CHANNEL0) ||
              (ulChannel == xPWM_CHANNEL1) ||
              (ulChannel == xPWM_CHANNEL2) ||
@@ -1060,7 +1079,7 @@ void xPWMStart(unsigned long ulBase, unsigned long ulChannel)
     (void) ulChannel;
 
     // Check input parameters.
-    xASSERT(ulBase == xPWM1_BASE);
+    xASSERT(PWMBaseValid(ulBase));
     xASSERT( (ulChannel == xPWM_CHANNEL0) ||
              (ulChannel == xPWM_CHANNEL1) ||
              (ulChannel == xPWM_CHANNEL2) ||
@@ -1101,7 +1120,7 @@ void xPWMStop(unsigned long ulBase, unsigned long ulChannel)
     (void) ulChannel;
 
     // Check input parameters.
-    xASSERT(ulBase == xPWM1_BASE);
+    xASSERT(PWMBaseValid(ulBase));
     xASSERT( (ulChannel == xPWM_CHANNEL0) ||
              (ulChannel == xPWM_CHANNEL1) ||
              (ulChannel == xPWM_CHANNEL2) ||

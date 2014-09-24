@@ -2,7 +2,7 @@
 //
 //! \file      gpio.h
 //! \brief     Prototypes for the GPIO Driver.
-//! \version   V2.2.1.0
+//! \version   V2.3.0.0
 //! \date      $CURRENTTIME$
 //! \author    CooCox
 //! \copyright
